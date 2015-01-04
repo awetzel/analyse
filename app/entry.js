@@ -10,12 +10,21 @@ window.addEventListener("hashchange", function() {
 		loadPageFromHash();
 	}
 }, false);
-loadPageFromHash();
+loadStatsFromJSON();
 
 function loadPageFromHash() {
 	loadPage.apply(null, location.hash.replace(/^#/, "").split("/"));
 }
 
+function loadStatsFromJSON(){
+	$.getJSON( "/webpack/stats.json", function( stats ) {
+		app.load(stats);
+		$("body").html(require("./pages/upload/application.jade")());
+		loadPageFromHash();
+	});
+}
+
+(new EventSource("/webpack/events")).onmessage = loadStatsFromJSON;
 
 var lastPage;
 
@@ -40,12 +49,6 @@ function loadPage(name) {
 			if(lastPage) lastPage();
 			lastPage = page.apply(null, args);
 			window.scrollTo(0, 0);
-			if(name !== "upload") {
-				ga('send', 'pageview', {
-					page: window.location.pathname.replace(/\/$/, "") + "/" + [name].concat(args).join("/"),
-					title: document.title
-				});
-			}
 		});
 	});
 }

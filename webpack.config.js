@@ -4,7 +4,7 @@ module.exports = {
 	entry: "./app/entry.js",
 	output: {
 		path: path.join(__dirname, "dist"),
-		publicPath: "",
+        publicPath: "/webpack/static/",
 		filename: "web.js",
 		chunkFilename: "[id].[hash].js",
 		jsonpCallback: "a"
