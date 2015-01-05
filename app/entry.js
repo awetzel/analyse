@@ -10,7 +10,10 @@ window.addEventListener("hashchange", function() {
 		loadPageFromHash();
 	}
 }, false);
-loadStatsFromJSON();
+$(function(){
+	$("body").html(require("./pages/upload/application.jade")());
+	loadStatsFromJSON();
+});
 
 function loadPageFromHash() {
 	loadPage.apply(null, location.hash.replace(/^#/, "").split("/"));
@@ -19,16 +22,14 @@ function loadPageFromHash() {
 function loadStatsFromJSON(){
 	$.getJSON( "/webpack/stats.json", function( stats ) {
 		app.load(stats);
-		$("body").html(require("./pages/upload/application.jade")());
+		$("#sigma-modules, #sigma.chunks").empty();
+		delete require.cache[require.resolve("./graphs/modules")];
+		delete require.cache[require.resolve("./graphs/chunks")];
 		loadPageFromHash();
 	});
 }
 
-(new EventSource("/webpack/events")).onmessage = function(sse){
-	var ev = JSON.parse(sse.data);
-	if (ev.compiler === "client" && ((ev.event === "done") || (ev.event === "failed")))
-		loadStatsFromJSON();
-}
+(new EventSource("/webpack/events")).addEventListener("done",loadStatsFromJSON);
 
 var lastPage;
 

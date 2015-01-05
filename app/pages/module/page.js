@@ -1,7 +1,7 @@
 var app = require("../../app");
-var modulesGraph = require("../../graphs/modules");
 
 module.exports = function(id) {
+	var modulesGraph = require("../../graphs/modules");
 	id = parseInt(id, 10);
 	var m = app.mapModulesUid[id];
 	document.title = "module " + m.id;

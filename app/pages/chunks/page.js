@@ -1,8 +1,7 @@
 var app = require("../../app");
-var chunksGraph = require("../../graphs/chunks");
-
 
 module.exports = function() {
+	var chunksGraph = require("../../graphs/chunks");
 	document.title = "chunks";
 	$(".page").html(require("./chunks.jade")({
 		stats: app.stats
