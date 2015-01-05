@@ -24,7 +24,11 @@ function loadStatsFromJSON(){
 	});
 }
 
-(new EventSource("/webpack/events")).onmessage = loadStatsFromJSON;
+(new EventSource("/webpack/events")).onmessage = function(sse){
+	var ev = JSON.parse(sse.data);
+	if (ev.compiler === "client" && ((ev.event === "done") || (ev.event === "failed")))
+		loadStatsFromJSON();
+}
 
 var lastPage;
 
